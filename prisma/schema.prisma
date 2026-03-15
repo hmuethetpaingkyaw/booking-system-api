@@ -1,0 +1,31 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+}
+
+enum UserRole {
+  admin
+  owner
+  user
+}
+
+model User {
+  id           Int       @id @default(autoincrement())
+  name         String    @unique
+  passwordHash String?
+  role         UserRole  @default(user)
+  bookings     Booking[]
+}
+
+model Booking {
+  id        Int      @id @default(autoincrement())
+  userId    Int
+  startTime DateTime
+  endTime   DateTime
+  createdAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
